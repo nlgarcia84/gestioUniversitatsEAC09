@@ -24,16 +24,12 @@ public class Application {
     public static void main(String[] args) {
         try {
             menuPrincipal();
-        } catch (Exception e) {
-            try {
-                throw new GestorUniversitatsException(e);
-            } catch (GestorUniversitatsException ex) {
-                System.out.println(ex.getMessage());
-            }
+        } catch (GestorUniversitatsException e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    private static void menuPrincipal() throws InputMismatchException {
+    private static void menuPrincipal() throws GestorUniversitatsException {
         int opcio = 0;
 
         do {
@@ -46,34 +42,24 @@ public class Application {
             System.out.println("\n5. Gestió de laboratoris");
             System.out.println("\n");
 
-            opcio = DADES.nextInt();
-            DADES.nextLine();
+            try {
+                opcio = DADES.nextInt();
+                DADES.nextLine();
+            } catch (InputMismatchException e) {
+                throw new GestorUniversitatsException(e);
+            }
 
             switch (opcio) {
                 case 0:
                     break;
                 case 1:
-                    try {
-                        menuUniversitats();
-                    } catch (Exception e) {
-                        try {
-                            throw new GestorUniversitatsException(e);
-                        } catch (GestorUniversitatsException ex) {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
+                    menuUniversitats();
                     break;
                 case 2:
                     if (universitatActual != null) {
-                        try {
-                            menuCampus();
-                        } catch (Exception e) {
-                            try {
-                                throw new GestorUniversitatsException(e);
-                            } catch (GestorUniversitatsException ex) {
-                                System.out.println(ex.getMessage());
-                            }
-                        }
+
+                        menuCampus();
+
                     } else {
                         System.out.println(
                                 "\nPrimer s'ha de seleccionar la universitat al menú 1. Gestió d'universitats.");
@@ -81,15 +67,9 @@ public class Application {
                     break;
                 case 3:
                     if (universitatActual != null) {
-                        try {
-                            menuAules(1);
-                        } catch (Exception e) {
-                            try {
-                                throw new GestorUniversitatsException(e);
-                            } catch (GestorUniversitatsException ex) {
-                                System.out.println(ex.getMessage());
-                            }
-                        }
+
+                        menuAules(1);
+
                     } else {
                         System.out.println(
                                 "\nPrimer s'ha de seleccionar la universitat al menú 1. Gestió d'universitats.");
@@ -97,15 +77,9 @@ public class Application {
                     break;
                 case 4:
                     if (universitatActual != null) {
-                        try {
-                            menuAules(2);
-                        } catch (Exception e) {
-                            try {
-                                throw new GestorUniversitatsException(e);
-                            } catch (GestorUniversitatsException ex) {
-                                System.out.println(ex.getMessage());
-                            }
-                        }
+
+                        menuAules(2);
+
                     } else {
                         System.out.println(
                                 "\nPrimer s'ha de seleccionar la universitat al menú 1. Gestió d'universitats.");
@@ -113,15 +87,9 @@ public class Application {
                     break;
                 case 5:
                     if (universitatActual != null) {
-                        try {
-                            menuAules(3);
-                        } catch (Exception e) {
-                            try {
-                                throw new GestorUniversitatsException(e);
-                            } catch (GestorUniversitatsException ex) {
-                                System.out.println(ex.getMessage());
-                            }
-                        }
+
+                        menuAules(3);
+
                     } else {
                         System.out.println(
                                 "\nPrimer s'ha de seleccionar la universitat al menú 1. Gestió d'universitats.");
@@ -134,7 +102,7 @@ public class Application {
         } while (opcio != 0);
     }
 
-    public static void menuUniversitats() throws ItemRepetitArrayException {
+    public static void menuUniversitats() throws InputMismatchException {
         int opcio;
 
         do {
@@ -154,19 +122,27 @@ public class Application {
                 case 0:
                     break;
                 case 1:
-                    Universitat novaUniversitat = Universitat.addUniversitat();
+                    try {
 
-                    indexSel = selectUniversitat(novaUniversitat);
+                        Universitat novaUniversitat = Universitat.addUniversitat();
 
-                    if (indexSel == -1) {
-                        universitats[pUniversitats] = novaUniversitat;
-                        pUniversitats++;
-                    } else {
-                        System.out.println("\nLa universitat ja existeix");
-                        throw new ItemRepetitArrayException();
+                        indexSel = selectUniversitat(novaUniversitat);
+                        if (indexSel == -1) {
+                            if (pUniversitats < universitats.length) {
+                                universitats[pUniversitats] = novaUniversitat;
+                                pUniversitats++;
+                            } else {
+                                throw new IndexOutOfBoundsException("S'ha arribat al limit d'universitats");
+                            }
+                        } else {
+                            throw new ItemRepetitArrayException("Universitat repetida");
+                        }
+                        break;
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new GestorUniversitatsException(e);
+                    } catch (ItemRepetitArrayException e) {
+                        throw new GestorUniversitatsException(e);
                     }
-
-                    break;
                 case 2:
                     indexSel = selectUniversitat(null);
 
@@ -210,6 +186,7 @@ public class Application {
 
             opcio = DADES.nextInt();
             DADES.nextLine();
+
             switch (opcio) {
                 case 0:
                     break;
@@ -237,7 +214,7 @@ public class Application {
         } while (opcio != 0);
     }
 
-    public static void menuAules(int tipus) throws InputMismatchException {
+    public static void menuAules(int tipus) throws GestorUniversitatsException {
         int opcio;
 
         do {
@@ -247,8 +224,13 @@ public class Application {
             System.out.println("\n2. Modificar");
             System.out.println("\n3. Llistar");
 
-            opcio = DADES.nextInt();
-            DADES.nextLine();
+            try {
+                opcio = DADES.nextInt();
+                DADES.nextLine();
+            } catch (InputMismatchException e) {
+                throw new GestorUniversitatsException(e);
+            }
+
             switch (opcio) {
                 case 0:
                     break;
