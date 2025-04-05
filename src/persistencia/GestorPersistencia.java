@@ -17,7 +17,8 @@ public class GestorPersistencia {
         gestor = pGestor;
     }
 
-    public void desarUniversitat(String tipusPersistencia, String nomFitxer, Universitat universitat) throws GestorUniversitatsException {
+    public void desarUniversitat(String tipusPersistencia, String nomFitxer, Universitat universitat)
+            throws GestorUniversitatsException {
         if (tipusPersistencia.equals("XML")) {
             gestor = new GestorXML();
             gestor.desarUniversitat(nomFitxer, universitat);

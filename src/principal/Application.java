@@ -5,6 +5,8 @@ import universitat.Universitat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import persistencia.GestorPersistencia;
+import persistencia.GestorXML;
 import universitat.AulaEstandard;
 import universitat.AulaInformatica;
 import universitat.GestorUniversitatsException;
@@ -20,6 +22,8 @@ public class Application {
     private static Universitat[] universitats = new Universitat[10];
     private static int pUniversitats = 0; // Primera posició buida del vector universitats
     private static Universitat universitatActual = null;
+    private final static String FITXER = "universitat";
+    private static GestorPersistencia gp = new GestorPersistencia();
 
     public static void main(String[] args) {
         try {
@@ -46,7 +50,7 @@ public class Application {
                 opcio = DADES.nextInt();
                 DADES.nextLine();
             } catch (InputMismatchException e) {
-                throw new GestorUniversitatsException(e);
+                throw new GestorUniversitatsException("1");
             }
 
             switch (opcio) {
@@ -102,7 +106,7 @@ public class Application {
         } while (opcio != 0);
     }
 
-    public static void menuUniversitats() throws InputMismatchException {
+    public static void menuUniversitats() throws InputMismatchException, GestorUniversitatsException {
         int opcio;
 
         do {
@@ -113,6 +117,9 @@ public class Application {
             System.out.println("\n2. Seleccionar");
             System.out.println("\n3. Modificar");
             System.out.println("\n4. Llistar");
+            System.out.println("\n5. Carregar universitats");
+            System.out.println("\n6. Desar Universitats");
+
             System.out.println("\n");
 
             opcio = DADES.nextInt();
@@ -139,9 +146,9 @@ public class Application {
                         }
                         break;
                     } catch (IndexOutOfBoundsException e) {
-                        throw new GestorUniversitatsException(e);
+                        throw new GestorUniversitatsException("2");
                     } catch (ItemRepetitArrayException e) {
-                        throw new GestorUniversitatsException(e);
+                        throw new GestorUniversitatsException("3");
                     }
                 case 2:
                     indexSel = selectUniversitat(null);
@@ -166,9 +173,12 @@ public class Application {
                         universitats[i].showUnitatUniversitat();
                     }
                     break;
+                case 5:
+                    break;
+                case 6:
+                    break;
                 default:
                     System.out.println("\nS'ha de seleccionar una opció correcta del menú.");
-                    break;
             }
         } while (opcio != 0);
     }
@@ -228,7 +238,7 @@ public class Application {
                 opcio = DADES.nextInt();
                 DADES.nextLine();
             } catch (InputMismatchException e) {
-                throw new GestorUniversitatsException(e);
+                throw new GestorUniversitatsException("1");
             }
 
             switch (opcio) {

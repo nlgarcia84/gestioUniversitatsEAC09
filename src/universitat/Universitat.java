@@ -116,7 +116,7 @@ public class Universitat implements UnitatUniversitat {
         int index = selectCampus(null);
 
         if (index != -1) {
-            campus.get(index).addAulaEstandard();
+            campus.get(index).addAulaEstandard(null);
         } else {
             System.out.println("\nEl campus no existeix");
         }
@@ -142,7 +142,7 @@ public class Universitat implements UnitatUniversitat {
         int index = selectCampus(null);
 
         if (index != -1) {
-            campus.get(index).addAulaInformatica();
+            campus.get(index).addAulaInformatica(null);
         } else {
             System.out.println("\nEl campus no existeix");
         }
@@ -168,7 +168,7 @@ public class Universitat implements UnitatUniversitat {
         int index = selectCampus(null);
 
         if (index != -1) {
-            campus.get(index).addLaboratori();
+            campus.get(index).addLaboratori(null);
         } else {
             System.out.println("\nEl campus no existeix");
         }

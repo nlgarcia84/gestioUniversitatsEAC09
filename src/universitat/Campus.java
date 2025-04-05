@@ -44,10 +44,6 @@ public class Campus implements UnitatUniversitat {
         return aules;
     }
 
-    public void setAules(ArrayList<Aula> aules) {
-        this.aules = aules;
-    }
-
     public static Campus addCampus() {
         String nom, ubicacio;
 
@@ -86,7 +82,7 @@ public class Campus implements UnitatUniversitat {
         System.out.println("\nCost de manteniment: " + this.costManteniment() + " EUR");
     }
 
-    public void addAulaEstandard() {
+    public void addAulaEstandard(AulaEstandard aulaEstandard) {
         AulaEstandard nouAulaEstandard = AulaEstandard.addAulaEstandard();
 
         if (selectAula(1, nouAulaEstandard.getCodi()) == -1) {
@@ -97,7 +93,7 @@ public class Campus implements UnitatUniversitat {
         }
     }
 
-    public void addAulaInformatica() {
+    public void addAulaInformatica(AulaInformatica aulaInformatica) {
         AulaInformatica novaAulaInformatica = AulaInformatica.addAulaInformatica();
 
         if (selectAula(2, novaAulaInformatica.getCodi()) == -1) {
@@ -108,7 +104,7 @@ public class Campus implements UnitatUniversitat {
         }
     }
 
-    public void addLaboratori() {
+    public void addLaboratori(Laboratori aulaLaboratori) {
         Laboratori novaLaboratori = Laboratori.addLaboratori();
 
         if (selectAula(3, novaLaboratori.getCodi()) == -1) {
