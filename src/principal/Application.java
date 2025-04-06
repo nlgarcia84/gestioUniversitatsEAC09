@@ -178,6 +178,7 @@ public class Application {
                 case 5:
                     System.out.println(FITXER + " a carregar:");
                     nomFitxer = DADES.nextLine() + ".xml";
+                    gp.carregarUniversitat("XML", nomFitxer);
                     break;
                 case 6:
                     gp.desarUniversitat("XML", universitatActual.getNomUniversitat(), universitatActual);
