@@ -153,6 +153,8 @@ public class GestorXML implements ProveedorPersistencia {
         }
     }
 
+    // Mètode que desa el fitxer xml que s'ha construit amb el mètode anterior
+    // construeixModel
     public void desarModel(String nomFitxer) throws GestorUniversitatsException {
         try {
             TransformerFactory tf = TransformerFactory.newInstance();
@@ -200,7 +202,7 @@ public class GestorXML implements ProveedorPersistencia {
      *
      * Retorn: cap
      */
-    private void llegirFitxerUniversitat() throws GestorUniversitatsException {
+    public void llegirFitxerUniversitat() throws GestorUniversitatsException {
 
         Element arrel = doc.getDocumentElement();
         // Creem l'objecte universitat a partir del element arrel que te els atributs de
@@ -209,6 +211,16 @@ public class GestorXML implements ProveedorPersistencia {
         NodeList campusList = arrel.getChildNodes();
         for (int i = 0; i < campusList.getLength(); i++) {
             universitat.addCampus();
+            NodeList aulaList = campusList.item(i).getChildNodes();
+            for (int j = 0; j < aulaList.getLength(); j++) {
+                if (aulaList.item(i).getNodeName() == "aulaEstandard") {
+                    universitat.addAulaEstandardCampus();
+                } else if (aulaList.item(i).getNodeName() == "aulaInformatica") {
+                    universitat.addAulaInformaticaCampus();
+                } else if (aulaList.item(i).getNodeName() == "laboratori") {
+                    universitat.addLaboratoriCampus();
+                }
+            }
         }
     }
 }

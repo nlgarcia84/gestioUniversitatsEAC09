@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import persistencia.GestorPersistencia;
+import persistencia.GestorXML;
 import universitat.AulaEstandard;
 import universitat.AulaInformatica;
 import universitat.GestorUniversitatsException;
@@ -23,6 +24,7 @@ public class Application {
     private static Universitat universitatActual = null;
     private final static String FITXER = "universitat";
     private static GestorPersistencia gp = new GestorPersistencia();
+    private static GestorXML gestor = new GestorXML();
     private static String nomFitxer;
 
     public static void main(String[] args) {
@@ -176,7 +178,6 @@ public class Application {
                 case 5:
                     System.out.println(FITXER + " a carregar:");
                     nomFitxer = DADES.nextLine() + ".xml";
-                    gp.carregarUniversitat("XML", nomFitxer);
                     break;
                 case 6:
                     gp.desarUniversitat("XML", universitatActual.getNomUniversitat(), universitatActual);
