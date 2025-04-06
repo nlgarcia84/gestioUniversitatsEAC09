@@ -24,7 +24,6 @@ public class Application {
     private static Universitat universitatActual = null;
     private final static String FITXER = "universitat";
     private static GestorPersistencia gp = new GestorPersistencia();
-    private static GestorXML gestor = new GestorXML();
     private static String nomFitxer;
 
     public static void main(String[] args) {
@@ -177,8 +176,11 @@ public class Application {
                     break;
                 case 5:
                     System.out.println(FITXER + " a carregar:");
-                    nomFitxer = DADES.nextLine() + ".xml";
-                    gp.carregarUniversitat("XML", nomFitxer);
+                    nomFitxer = DADES.nextLine();
+                    if (gp.getGestor() != null) {
+                        gp.getGestor().carregarFitxer(nomFitxer);
+                        gp.getGestor().llegirFitxerUniversitat();
+                    }
                     break;
                 case 6:
                     gp.desarUniversitat("XML", universitatActual.getNomUniversitat(), universitatActual);

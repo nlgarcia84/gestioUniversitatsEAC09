@@ -203,21 +203,21 @@ public class GestorXML implements ProveedorPersistencia {
      * Retorn: cap
      */
     public void llegirFitxerUniversitat() throws GestorUniversitatsException {
-
         Element arrel = doc.getDocumentElement();
         // Creem l'objecte universitat a partir del element arrel que te els atributs de
         // nom i ubicacio
-        Universitat universitat = new Universitat(arrel.getAttribute("nom"), arrel.getAttribute("ubicacio"));
-        NodeList campusList = arrel.getChildNodes();
+        this.universitat = new Universitat(arrel.getAttribute("nom"), arrel.getAttribute("ubicacio"));
+        NodeList campusList = arrel.getElementsByTagName("campus");
         for (int i = 0; i < campusList.getLength(); i++) {
+            Element campus = (Element) campusList.item(i);
             universitat.addCampus();
-            NodeList aulaList = campusList.item(i).getChildNodes();
+            NodeList aulaList = campus.getChildNodes();
             for (int j = 0; j < aulaList.getLength(); j++) {
-                if (aulaList.item(i).getNodeName() == "aulaEstandard") {
+                if (aulaList.item(j).getNodeName().equals("aulaEstandard")) {
                     universitat.addAulaEstandardCampus();
-                } else if (aulaList.item(i).getNodeName() == "aulaInformatica") {
+                } else if (aulaList.item(j).getNodeName().equals("aulaInformatica")) {
                     universitat.addAulaInformaticaCampus();
-                } else if (aulaList.item(i).getNodeName() == "laboratori") {
+                } else if (aulaList.item(j).getNodeName().equals("laboratori")) {
                     universitat.addLaboratoriCampus();
                 }
             }
