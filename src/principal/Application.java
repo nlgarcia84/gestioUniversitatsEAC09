@@ -6,7 +6,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import persistencia.GestorPersistencia;
-import persistencia.GestorXML;
 import universitat.AulaEstandard;
 import universitat.AulaInformatica;
 import universitat.GestorUniversitatsException;
@@ -24,6 +23,7 @@ public class Application {
     private static Universitat universitatActual = null;
     private final static String FITXER = "universitat";
     private static GestorPersistencia gp = new GestorPersistencia();
+    private static String nomFitxer;
 
     public static void main(String[] args) {
         try {
@@ -174,8 +174,12 @@ public class Application {
                     }
                     break;
                 case 5:
+                    System.out.println(FITXER + " a carregar:");
+                    nomFitxer = DADES.nextLine() + ".xml";
+                    gp.carregarUniversitat("XML", nomFitxer);
                     break;
                 case 6:
+                    gp.desarUniversitat("XML", universitatActual.getNomUniversitat(), universitatActual);
                     break;
                 default:
                     System.out.println("\nS'ha de seleccionar una opció correcta del menú.");

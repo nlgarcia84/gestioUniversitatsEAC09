@@ -15,6 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import universitat.GestorUniversitatsException;
 import universitat.Universitat;
 import universitat.Campus;
@@ -165,7 +166,8 @@ public class GestorXML implements ProveedorPersistencia {
         Document document = null;
         try {
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            File f = new File("elMeuFitxer.xml");
+            String nomUniversitatFile = nomFitxer + ".xml";
+            File f = new File(nomUniversitatFile);
             document = builder.parse(f);
         } catch (Exception ex) {
             System.out.println("Error en la lectura del document: " + ex);
