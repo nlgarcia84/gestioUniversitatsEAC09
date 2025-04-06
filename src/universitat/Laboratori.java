@@ -67,4 +67,5 @@ public class Laboratori extends Aula {
     public double costManteniment() {
         return (double) (this.getCostPerDia() * 0.35) + (this.getCapacitat() * 0.1);
     }
+
 }

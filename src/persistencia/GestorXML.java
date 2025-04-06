@@ -15,11 +15,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import universitat.GestorUniversitatsException;
+import universitat.Laboratori;
 import universitat.Universitat;
 import universitat.Campus;
 import universitat.Aula;
+import universitat.AulaInformatica;
 
 /**
  *
@@ -27,6 +28,7 @@ import universitat.Aula;
 public class GestorXML implements ProveedorPersistencia {
     private Document doc;
     private Universitat universitat;
+    private String nomFitxer;
 
     public Document getDoc() {
         return doc;
@@ -34,6 +36,10 @@ public class GestorXML implements ProveedorPersistencia {
 
     public Universitat getUniversitat() {
         return universitat;
+    }
+
+    public String getNomFitxer() {
+        return nomFitxer;
     }
 
     @Override
@@ -88,27 +94,61 @@ public class GestorXML implements ProveedorPersistencia {
         } catch (ParserConfigurationException e) {
             throw new GestorUniversitatsException("GestorXML.model");
         }
+        // Creem el document dom
         this.doc = builder.newDocument();
 
         // Construcció de l'element arrel
-        // Element arrel
+        // Creem l'element arrel
         Element arrel = doc.createElement("universitat");
-        // afegim l'arrel al document doc
+        // Afegim l'element arrel creat al dom
         this.doc.appendChild(arrel);
         // afegim els atributs a l'arrel
         arrel.setAttribute("nom", universitat.getNomUniversitat());
         arrel.setAttribute("ubicacio", universitat.getUbicacioSeu());
 
+        // Per a cada campus d'objecte campus creem un element campusXML i li afegim
+        // els dos atributs nom i ubicació
         for (Campus elementCampus : universitat.getCampus()) {
             Element campusXML = doc.createElement("campus");
             campusXML.setAttribute("nom", elementCampus.getNomCampus());
             campusXML.setAttribute("ubicacio", elementCampus.getUbicacio());
+            // L'afegim com a fill de l'element arrel o sigui universitat
             arrel.appendChild(campusXML);
+            // Afegim l'aula per a cada campus
             for (Aula elementAula : elementCampus.getAules()) {
-                Element aulaXML = doc.createElement("aula");
-                aulaXML.setAttribute("cost", elementAula.getCodi());
-                aulaXML.setAttribute("costPerDia", Double.toString(elementAula.getCostPerDia()));
-                aulaXML.setAttribute("numeroAula", Integer.toString(elementAula.getNumeroAula()));
+
+                String tipusAula = elementAula.getClass().getSimpleName();
+
+                switch (tipusAula) {
+                    case "AulaEstandard":
+                        Element aulaEstandardXML = doc.createElement("aulaEstandard");
+                        aulaEstandardXML.setAttribute("codi", elementAula.getCodi());
+                        aulaEstandardXML.setAttribute("numeroAula", Integer.toString(elementAula.getNumeroAula()));
+                        aulaEstandardXML.setAttribute("costPerDia", Double.toString(elementAula.getCostPerDia()));
+                        campusXML.appendChild(aulaEstandardXML);
+                        break;
+                    case "AulaInformatica":
+                        Element aulaInformaticaXML = doc.createElement("aulaInformatica");
+                        aulaInformaticaXML.setAttribute("codi", elementAula.getCodi());
+                        aulaInformaticaXML.setAttribute("numeroAula", Integer.toString(elementAula.getNumeroAula()));
+                        aulaInformaticaXML.setAttribute("costPerDia", Double.toString(elementAula.getCostPerDia()));
+                        aulaInformaticaXML.setAttribute("areaEnMetresQuadrats",
+                                Double.toString(((AulaInformatica) elementAula).getAreaEnMetresQuadrats()));
+                        campusXML.appendChild(aulaInformaticaXML);
+                        break;
+                    case "Laboratori":
+                        Element laboratoriXML = doc.createElement("laboratori");
+                        laboratoriXML.setAttribute("codi", elementAula.getCodi());
+                        laboratoriXML.setAttribute("numeroAula", Integer.toString(elementAula.getNumeroAula()));
+                        laboratoriXML.setAttribute("costPerDia", Double.toString(elementAula.getCostPerDia()));
+                        laboratoriXML.setAttribute("capacitat",
+                                String.valueOf(((Laboratori) elementAula).getCapacitat()));
+                        campusXML.appendChild(laboratoriXML);
+                        break;
+                    default:
+                        break;
+                }
+
             }
         }
     }
@@ -162,33 +202,13 @@ public class GestorXML implements ProveedorPersistencia {
      */
     private void llegirFitxerUniversitat() throws GestorUniversitatsException {
 
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        Document document = null;
-        try {
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            String nomUniversitatFile = nomFitxer + ".xml";
-            File f = new File(nomUniversitatFile);
-            document = builder.parse(f);
-        } catch (Exception ex) {
-            System.out.println("Error en la lectura del document: " + ex);
-        }
-
-        Element arrel = document.getDocumentElement();
-        NodeList llistaCampus = arrel.getElementsByTagName("universitat");
-        for (int i = 0; i < llistaCampus.getLength(); i++) {
-            Element campus = (Element) llistaCampus.item(i);
-            NodeList llistaFills = campus.getChildNodes();
-            String text = "";
-            for (int j = 0; j < llistaFills.getLength(); j++) {
-                Node n = llistaFills.item(j);
-
-                if ((n.getNodeType() == Node.TEXT_NODE) ||
-                        (n.getNodeType() == Node.CDATA_SECTION_NODE)) {
-
-                    text += n.getNodeValue();
-                }
-                System.out.println(text);
-            }
+        Element arrel = doc.getDocumentElement();
+        // Creem l'objecte universitat a partir del element arrel que te els atributs de
+        // nom i ubicacio
+        Universitat universitat = new Universitat(arrel.getAttribute("nom"), arrel.getAttribute("ubicacio"));
+        NodeList campusList = arrel.getChildNodes();
+        for (int i = 0; i < campusList.getLength(); i++) {
+            universitat.addCampus();
         }
     }
 }

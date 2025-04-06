@@ -1,1 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><universitat nom="ub" ubicacio="dsds"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<universitat nom="ub" ubicacio="barcelona">
+<campus nom="economia" ubicacio="barcelona">
+<aulaEstandard codi="1001" costPerDia="20.0" numeroAula="22"/>
+</campus>
+</universitat>
