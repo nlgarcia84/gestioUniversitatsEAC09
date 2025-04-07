@@ -175,9 +175,12 @@ public class Application {
                     }
                     break;
                 case 5:
-                    System.out.println(FITXER + " a carregar:");
+                    // Demanem a l'usuari el nom de la universitat
+                    System.out.println("Introdueix la universitat a carregar:");
+                    // Guardem la entrada
                     nomFitxer = DADES.nextLine();
-                    if (gp.getGestor() != null) {
+                    // Comprobem que el que entra l'usuari no es null
+                    if (nomFitxer != null) {
                         gp.getGestor().carregarFitxer(nomFitxer);
                         gp.getGestor().llegirFitxerUniversitat();
                     }

@@ -28,7 +28,6 @@ import universitat.AulaInformatica;
 public class GestorXML implements ProveedorPersistencia {
     private Document doc;
     private Universitat universitat;
-    private String nomFitxer;
 
     public Document getDoc() {
         return doc;
@@ -36,10 +35,6 @@ public class GestorXML implements ProveedorPersistencia {
 
     public Universitat getUniversitat() {
         return universitat;
-    }
-
-    public String getNomFitxer() {
-        return nomFitxer;
     }
 
     @Override
