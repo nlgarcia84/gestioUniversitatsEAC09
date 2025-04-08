@@ -2,9 +2,12 @@ package persistencia;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -15,11 +18,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.apple.eawt.Application;
+
 import universitat.GestorUniversitatsException;
 import universitat.Laboratori;
 import universitat.Universitat;
 import universitat.Campus;
 import universitat.Aula;
+import universitat.AulaEstandard;
 import universitat.AulaInformatica;
 
 /**
@@ -98,14 +105,14 @@ public class GestorXML implements ProveedorPersistencia {
         // Afegim l'element arrel creat al dom
         this.doc.appendChild(arrel);
         // afegim els atributs a l'arrel
-        arrel.setAttribute("nom", universitat.getNomUniversitat());
-        arrel.setAttribute("ubicacio", universitat.getUbicacioSeu());
+        arrel.setAttribute("nomUniversitat", universitat.getNomUniversitat());
+        arrel.setAttribute("ubicacioSeu", universitat.getUbicacioSeu());
 
         // Per a cada campus d'objecte campus creem un element campusXML i li afegim
         // els dos atributs nom i ubicació
         for (Campus elementCampus : universitat.getCampus()) {
             Element campusXML = doc.createElement("campus");
-            campusXML.setAttribute("nom", elementCampus.getNomCampus());
+            campusXML.setAttribute("nomCampus", elementCampus.getNomCampus());
             campusXML.setAttribute("ubicacio", elementCampus.getUbicacio());
             // L'afegim com a fill de l'element arrel o sigui universitat
             arrel.appendChild(campusXML);
@@ -168,6 +175,9 @@ public class GestorXML implements ProveedorPersistencia {
         try {
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
             File f = new File(nomFitxer + ".xml");
+            if (!f.exists()) {
+                System.out.println("El archivo " + nomFitxer + ".xml no se encuentra.");
+            }
             doc = builder.parse(f);
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             throw new GestorUniversitatsException("GestorXML.carrega");
@@ -198,24 +208,67 @@ public class GestorXML implements ProveedorPersistencia {
      * Retorn: cap
      */
     public void llegirFitxerUniversitat() throws GestorUniversitatsException {
+
+        doc.getDocumentElement().normalize();
+
         Element arrel = doc.getDocumentElement();
         // Creem l'objecte universitat a partir del element arrel que te els atributs de
         // nom i ubicacio
-        this.universitat = new Universitat(arrel.getAttribute("nom"), arrel.getAttribute("ubicacio"));
-        NodeList campusList = arrel.getElementsByTagName("campus");
+
+        this.universitat = new Universitat(arrel.getAttribute("nomUniversitat"), arrel.getAttribute("ubicacioSeu"));
+
+        System.out.println("Nombre de la universidad: " + this.universitat.getNomUniversitat());
+
+        NodeList campusList = arrel.getChildNodes();
+
         for (int i = 0; i < campusList.getLength(); i++) {
-            Element campus = (Element) campusList.item(i);
-            universitat.addCampus();
-            NodeList aulaList = campus.getChildNodes();
-            for (int j = 0; j < aulaList.getLength(); j++) {
-                if (aulaList.item(j).getNodeName().equals("aulaEstandard")) {
-                    universitat.addAulaEstandardCampus();
-                } else if (aulaList.item(j).getNodeName().equals("aulaInformatica")) {
-                    universitat.addAulaInformaticaCampus();
-                } else if (aulaList.item(j).getNodeName().equals("laboratori")) {
-                    universitat.addLaboratoriCampus();
+
+            Node campusNode = campusList.item(i);
+
+            if (campusNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element campusElement = (Element) campusNode;
+
+                String nomCampus = campusElement.getAttribute("nomCampus");
+                String ubicacioCampus = campusElement.getAttribute("ubicacio");
+                Campus campus = new Campus(nomCampus, ubicacioCampus);
+
+                NodeList aulaList = campusElement.getChildNodes();
+
+                for (int j = 0; j < aulaList.getLength(); j++) {
+                    Node aulaNode = aulaList.item(j);
+
+                    if (aulaNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element aula = (Element) aulaNode;
+                        String tipoAula = aula.getNodeName();
+
+                        String codi = aula.getAttribute("codi");
+                        try {
+                            double costPerDia = Double.parseDouble(aula.getAttribute("costPerDia"));
+                            int numeroAula = Integer.parseInt(aula.getAttribute("numeroAula"));
+
+                            switch (tipoAula) {
+                                case "aulaEstandard":
+                                    campus.addAulaEstandardXML(new AulaEstandard(codi, numeroAula, costPerDia));
+                                    break;
+                                case "aulaInformatica":
+                                    double area = Double.parseDouble(aula.getAttribute("areaEnMetresQuadrats"));
+                                    campus.addAulaInformaticaXML(
+                                            new AulaInformatica(codi, numeroAula, costPerDia, area));
+                                    break;
+                                case "laboratori":
+                                    int capacitat = Integer.parseInt(aula.getAttribute("capacitat"));
+                                    campus.addLaboratoriXML(new Laboratori(codi, numeroAula, costPerDia, capacitat));
+                                    break;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
                 }
+                universitat.addCampus(campus);
             }
         }
+
     }
+
 }

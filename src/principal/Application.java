@@ -23,8 +23,8 @@ public class Application {
     private static int pUniversitats = 0; // Primera posició buida del vector universitats
     private static Universitat universitatActual = null;
     private final static String FITXER = "universitat";
+    private static String nomUni;
     private static GestorPersistencia gp = new GestorPersistencia();
-    private static String nomFitxer;
 
     public static void main(String[] args) {
         try {
@@ -123,8 +123,12 @@ public class Application {
 
             System.out.println("\n");
 
-            opcio = DADES.nextInt();
-            DADES.nextLine();
+            try {
+                opcio = DADES.nextInt();
+                DADES.nextLine();
+            } catch (InputMismatchException e) {
+                throw new GestorUniversitatsException("1");
+            }
 
             switch (opcio) {
                 case 0:
@@ -178,12 +182,10 @@ public class Application {
                     // Demanem a l'usuari el nom de la universitat
                     System.out.println("Introdueix la universitat a carregar:");
                     // Guardem la entrada
-                    nomFitxer = DADES.nextLine();
+                    nomUni = DADES.nextLine();
+                    gp.setGestor(new GestorXML());
                     // Comprobem que el que entra l'usuari no es null
-                    if (nomFitxer != null) {
-                        gp.getGestor().carregarFitxer(nomFitxer);
-                        gp.getGestor().llegirFitxerUniversitat();
-                    }
+                    gp.getGestor().carregarUniversitat(nomUni);
                     break;
                 case 6:
                     gp.desarUniversitat("XML", universitatActual.getNomUniversitat(), universitatActual);

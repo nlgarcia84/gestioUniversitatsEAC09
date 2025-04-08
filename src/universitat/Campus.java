@@ -87,7 +87,15 @@ public class Campus implements UnitatUniversitat {
 
         if (selectAula(1, nouAulaEstandard.getCodi()) == -1) {
             aules.add(nouAulaEstandard);
-            aules.trimToSize();
+        } else {
+            System.out.println("\nAula Estàndard ja existeix");
+        }
+    }
+
+    public void addAulaEstandardXML(AulaEstandard aulaEstandard) {
+
+        if (selectAula(1, aulaEstandard.getCodi()) == -1) {
+            aules.add(aulaEstandard);
         } else {
             System.out.println("\nAula Estàndard ja existeix");
         }
@@ -98,7 +106,15 @@ public class Campus implements UnitatUniversitat {
 
         if (selectAula(2, novaAulaInformatica.getCodi()) == -1) {
             aules.add(novaAulaInformatica);
-            aules.trimToSize();
+        } else {
+            System.out.println("\nAula d'informàtica ja existeix");
+        }
+    }
+
+    public void addAulaInformaticaXML(AulaInformatica aulaInformatica) {
+
+        if (selectAula(2, aulaInformatica.getCodi()) == -1) {
+            aules.add(aulaInformatica);
         } else {
             System.out.println("\nAula d'informàtica ja existeix");
         }
@@ -109,6 +125,16 @@ public class Campus implements UnitatUniversitat {
 
         if (selectAula(3, novaLaboratori.getCodi()) == -1) {
             aules.add(novaLaboratori);
+
+        } else {
+            System.out.println("\nLaboratori ja existeix");
+        }
+    }
+
+    public void addLaboratoriXML(Laboratori aulaLaboratori) {
+
+        if (selectAula(3, aulaLaboratori.getCodi()) == -1) {
+            aules.add(aulaLaboratori);
 
         } else {
             System.out.println("\nLaboratori ja existeix");

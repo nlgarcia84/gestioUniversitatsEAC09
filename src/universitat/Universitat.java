@@ -46,6 +46,10 @@ public class Universitat implements UnitatUniversitat {
         return campus;
     }
 
+    public void addCampus(Campus campusOb) {
+        campus.add(campusOb);
+    }
+
     public static Universitat addUniversitat() {
 
         String nomUniversitat, ubicacioSeu;
@@ -188,6 +192,11 @@ public class Universitat implements UnitatUniversitat {
         } else {
             System.out.println("\nEl campus no existeix");
         }
+    }
+
+    public static void addUniversitat(Universitat universitat) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addUniversitat'");
     }
 
 }
