@@ -186,8 +186,12 @@ public class Application {
                     // Guardem la entrada
                     nomUni = DADES.nextLine();
                     gp.setGestor(new GestorXML());
-                    // Comprobem que el que entra l'usuari no es null
+                    // Comprobem que el que entra l'usuari no es null i carreguem l'arxiu al dom
                     gp.getGestor().carregarUniversitat(nomUni);
+                    // injectem la nova universitat a la posició buida de la array universitats
+                    Universitat universitatXML = gp.getGestor().getUniversitat();
+                    universitats[pUniversitats] = universitatXML;
+                    pUniversitats++;
                     break;
                 case 6:
                     gp.desarUniversitat("XML", universitatActual.getNomUniversitat(), universitatActual);
