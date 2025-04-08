@@ -107,7 +107,7 @@ public class Application {
         } while (opcio != 0);
     }
 
-    public static void menuUniversitats() throws InputMismatchException, GestorUniversitatsException {
+    public static void menuUniversitats() throws GestorUniversitatsException {
         int opcio;
 
         do {
@@ -128,6 +128,8 @@ public class Application {
                 DADES.nextLine();
             } catch (InputMismatchException e) {
                 throw new GestorUniversitatsException("1");
+            } catch (IndexOutOfBoundsException e) {
+                throw new GestorUniversitatsException("2");
             }
 
             switch (opcio) {
@@ -196,7 +198,7 @@ public class Application {
         } while (opcio != 0);
     }
 
-    public static void menuCampus() throws InputMismatchException {
+    public static void menuCampus() throws GestorUniversitatsException {
         int opcio;
 
         do {
@@ -207,8 +209,12 @@ public class Application {
             System.out.println("\n3. Llistar");
             System.out.println("\n");
 
-            opcio = DADES.nextInt();
-            DADES.nextLine();
+            try {
+                opcio = DADES.nextInt();
+                DADES.nextLine();
+            } catch (InputMismatchException e) {
+                throw new GestorUniversitatsException("1");
+            }
 
             switch (opcio) {
                 case 0:
